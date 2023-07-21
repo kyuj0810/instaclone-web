@@ -7,15 +7,21 @@ import {
 import Home from './screens/Home';
 import Login from './screens/Login';
 import NotFound from './screens/NotFound';
+import { useState } from 'react';
 
 function App() {
-  const isLoggedIn = true;
+  const [isLoggedIn, setIsLoggendIn] = useState(false);
+
   return (
     <div>
       <Router>
         <Switch>
           <Route path="/" exact>
-            {isLoggedIn ? <Home /> : <Login />}
+            {isLoggedIn ? (
+              <Home setIsLoggendIn={setIsLoggendIn} />
+            ) : (
+              <Login setIsLoggendIn={setIsLoggendIn} />
+            )}
           </Route>
           <Route>
             <NotFound />
