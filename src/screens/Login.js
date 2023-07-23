@@ -11,7 +11,8 @@ import FormBox from '../components/auth/FormBox';
 import Input from '../components/auth/Input';
 import Separator from '../components/auth/Separator';
 import routes from '../routes';
-import { useState } from 'react';
+import PageTitle from '../components/PageTitle';
+import { useForm } from 'react-hook-form';
 
 const FacebookLogin = styled.div`
   color: #385285;
@@ -22,42 +23,38 @@ const FacebookLogin = styled.div`
 `;
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [usernameError, setUsernameError] = useState('');
-  const onUsernameChange = (event) => {
-    setUsernameError('');
-    setUsername(event.target.value);
+  const { register, handleSubmit } = useForm(); //register : input을 위해 state, onChage,value설정하는데 도움을 줌.
+  const onSubmitValid = (data) => {
+    console.log(data);
   };
-  const handelSubmit = (event) => {
-    event.preventDefault();
-    if (username === '') {
-      setUsernameError('Not empty pls.');
-    }
-    if (username.length < 10) {
-      setUsernameError('too short');
-    }
-    console.log(username);
+
+  const onSubmitInValid = (data) => {
+    console.log(data, 'invalid');
   };
+
   return (
     <AuthLayout>
+      <PageTitle title="Login" />
       <FormBox>
         <div>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
-        <form onSubmit={handelSubmit}>
-          {usernameError}
+        <form onSubmit={handleSubmit(onSubmitValid, onSubmitInValid)}>
           <Input
-            onChange={onUsernameChange}
-            values={username}
+            {...register('username', {
+              required: 'Username is required',
+              minLength: 5,
+              validate: (cureentValue) => cureentValue.includes('potato'),
+            })}
             type="text"
             placeholder="Username"
           />
-          <Input type="password" placeholder="Password" />
-          <Button
-            type="submit"
-            value="Log in"
-            disabled={username === '' && username.length < 10}
+          <Input
+            {...register('password', { required: 'Password is required' })}
+            type="password"
+            placeholder="Password"
           />
+          <Button type="submit" value="Log in" />
         </form>
         <Separator />
         <FacebookLogin>

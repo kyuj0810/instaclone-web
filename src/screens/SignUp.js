@@ -5,10 +5,10 @@ import BottomBox from '../components/auth/BottomBox';
 import Button from '../components/auth/Button';
 import FormBox from '../components/auth/FormBox';
 import Input from '../components/auth/Input';
-import Separator from '../components/auth/Separator';
 import routes from '../routes';
 import { styled } from 'styled-components';
 import { FatLink } from '../components/shared';
+import PageTitle from '../components/PageTitle';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -25,6 +25,7 @@ const Subtitle = styled(FatLink)`
 function SignUp() {
   return (
     <AuthLayout>
+      <PageTitle title="Sign up" />
       <FormBox>
         <div>
           <HeaderContainer>
@@ -39,7 +40,7 @@ function SignUp() {
           <Input type="text" placeholder="Full Name" />
           <Input type="text" placeholder="Username" />
           <Input type="password" placeholder="Password" />
-          <Button type="submit" value="Log up" />
+          <Button type="submit" value="Sign up" />
         </form>
       </FormBox>
 
