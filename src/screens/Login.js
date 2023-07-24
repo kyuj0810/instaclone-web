@@ -14,6 +14,7 @@ import routes from '../routes';
 import PageTitle from '../components/PageTitle';
 import { useForm } from 'react-hook-form';
 import FormError from '../components/auth/FormError';
+import { gql, useMutation } from '@apollo/client';
 
 const FacebookLogin = styled.div`
   color: #385285;
@@ -23,13 +24,41 @@ const FacebookLogin = styled.div`
   }
 `;
 
+const LOGIN_MUTATION = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      ok
+      token
+      error
+    }
+  }
+`;
+
 function Login() {
-  const { register, handleSubmit, formState } = useForm({
+  const { register, handleSubmit, formState, getValues, setError } = useForm({
     mode: 'onChanged',
   }); //register : input을 위해 state, onChage,value설정하는데 도움을 줌.
 
+  //onCompleted : Mutation이 오류없이 성공적으로 완료될 때 호출되는 콜백 함수
+  const onCompleted = (data) => {
+    const {
+      login: { ok, error, token },
+    } = data;
+    if (!ok) {
+      setError('result', { message: error });
+    }
+  };
+  const [login, { loading }] = useMutation(LOGIN_MUTATION, {
+    onCompleted,
+  });
   const onSubmitValid = (data) => {
-    //console.log(data);
+    if (loading) {
+      return;
+    }
+    const { username, password } = getValues();
+    login({
+      variables: { username, password },
+    });
   };
 
   return (
@@ -61,7 +90,12 @@ function Login() {
             hasError={Boolean(formState.errors?.password?.message)}
           />
           <FormError message={formState.errors?.password?.message} />
-          <Button type="submit" value="Log in" disabled={!formState.isValid} />
+          <Button
+            type="submit"
+            value={loading ? 'Loaindg...' : 'Log in'}
+            disabled={!formState.isValid || loading}
+          />
+          <FormError message={formState.errors?.result?.message} />
         </form>
         <Separator />
         <FacebookLogin>
