@@ -15,6 +15,7 @@ import PageTitle from '../components/PageTitle';
 import { useForm } from 'react-hook-form';
 import FormError from '../components/auth/FormError';
 import { gql, useMutation } from '@apollo/client';
+import { logUserIn } from '../apollo';
 
 const FacebookLogin = styled.div`
   color: #385285;
@@ -35,7 +36,14 @@ const LOGIN_MUTATION = gql`
 `;
 
 function Login() {
-  const { register, handleSubmit, formState, getValues, setError } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState,
+    getValues,
+    setError,
+    clearErrors,
+  } = useForm({
     mode: 'onChanged',
   }); //register : input을 위해 state, onChage,value설정하는데 도움을 줌.
 
@@ -46,6 +54,9 @@ function Login() {
     } = data;
     if (!ok) {
       setError('result', { message: error });
+    }
+    if (token) {
+      logUserIn(token);
     }
   };
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
@@ -59,6 +70,9 @@ function Login() {
     login({
       variables: { username, password },
     });
+  };
+  const clearLoginError = () => {
+    clearErrors('result');
   };
 
   return (
@@ -78,6 +92,8 @@ function Login() {
               },
               //validate: (cureentValue) => cureentValue.includes('potato'),
             })}
+            onChange={clearLoginError}
+            username="username"
             type="text"
             placeholder="Username"
             hasError={Boolean(formState.errors?.username?.message)}
@@ -85,6 +101,8 @@ function Login() {
           <FormError message={formState.errors?.username?.message} />
           <Input
             {...register('password', { required: 'Password is required' })}
+            onChange={clearLoginError}
+            username="password"
             type="password"
             placeholder="Password"
             hasError={Boolean(formState.errors?.password?.message)}
