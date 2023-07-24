@@ -48,19 +48,19 @@ function Header() {
     <SHeader>
       <Wrapper>
         <Column>
-          <FontAwesomeIcon icon={faInstagram} size="2px" />
+          <FontAwesomeIcon icon={faInstagram} size="1x" />
         </Column>
         <Column>
           {isLoggedIn ? (
             <>
               <Icon>
-                <FontAwesomeIcon icon={faHome} size="1g" />
+                <FontAwesomeIcon icon={faHome} size="1x" />
               </Icon>
               <Icon>
-                <FontAwesomeIcon icon={faCompass} size="1g" />
+                <FontAwesomeIcon icon={faCompass} size="1x" />
               </Icon>
               <Icon>
-                <FontAwesomeIcon icon={faUser} size="1g" />
+                <FontAwesomeIcon icon={faUser} size="1x" />
               </Icon>
             </>
           ) : (
