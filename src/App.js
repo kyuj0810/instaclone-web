@@ -23,7 +23,6 @@ function App() {
           <GlobalStyles />
           <div>
             <Router>
-              <Header />
               <Switch>
                 <Route path={routes.home} exact>
                   {isLoggedIn ? (

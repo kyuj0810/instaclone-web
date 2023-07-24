@@ -5,6 +5,9 @@ import { faCompass, faUser } from '@fortawesome/free-regular-svg-icons';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { useReactiveVar } from '@apollo/client';
 import { isLoggedInVar } from '../apollo';
+import { Link } from 'react-router-dom';
+import routes from '../routes';
+import useUser from '../hooks/useUser';
 
 const SHeader = styled.header`
   width: 100%;
@@ -30,8 +33,17 @@ const Icon = styled.span`
   margin-left: 15px;
 `;
 
+const Button = styled.span`
+  background-color: ${(props) => props.theme.accent};
+  border-radius: 4px;
+  padding: 4px 15px;
+  color: white;
+  font-weight: 600;
+`;
+
 function Header() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
+  const loggedInUser = useUser();
   return (
     <SHeader>
       <Wrapper>
@@ -51,7 +63,11 @@ function Header() {
                 <FontAwesomeIcon icon={faUser} size="1g" />
               </Icon>
             </>
-          ) : null}
+          ) : (
+            <Link href={routes.home}>
+              <Button>Login</Button>
+            </Link>
+          )}
         </Column>
       </Wrapper>
     </SHeader>
