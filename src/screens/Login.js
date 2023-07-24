@@ -93,7 +93,7 @@ function Login() {
               //validate: (cureentValue) => cureentValue.includes('potato'),
             })}
             onChange={clearLoginError}
-            username="username"
+            name="username"
             type="text"
             placeholder="Username"
             hasError={Boolean(formState.errors?.username?.message)}
@@ -102,7 +102,7 @@ function Login() {
           <Input
             {...register('password', { required: 'Password is required' })}
             onChange={clearLoginError}
-            username="password"
+            name="password"
             type="password"
             placeholder="Password"
             hasError={Boolean(formState.errors?.password?.message)}
