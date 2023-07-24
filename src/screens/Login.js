@@ -17,6 +17,7 @@ import FormError from '../components/auth/FormError';
 import { gql, useMutation } from '@apollo/client';
 import { logUserIn } from '../apollo';
 import { useLocation } from 'react-router-dom';
+import Notification from '../components/auth/Notification';
 
 const FacebookLogin = styled.div`
   color: #385285;
@@ -24,10 +25,6 @@ const FacebookLogin = styled.div`
     margin-left: 10px;
     font-weight: 600;
   }
-`;
-
-const Notification = styled.div`
-  color: #2ecc71;
 `;
 
 const LOGIN_MUTATION = gql`
@@ -93,7 +90,8 @@ function Login() {
         <div>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
-        <Notification>{location?.state?.message}</Notification>
+        <Notification message={location?.state?.message} />
+
         <form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
             {...register('username', {
