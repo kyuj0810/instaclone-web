@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form';
 import FormError from '../components/auth/FormError';
 import { gql, useMutation } from '@apollo/client';
 import { logUserIn } from '../apollo';
+import { useLocation } from 'react-router-dom';
 
 const FacebookLogin = styled.div`
   color: #385285;
@@ -23,6 +24,10 @@ const FacebookLogin = styled.div`
     margin-left: 10px;
     font-weight: 600;
   }
+`;
+
+const Notification = styled.div`
+  color: #2ecc71;
 `;
 
 const LOGIN_MUTATION = gql`
@@ -36,6 +41,8 @@ const LOGIN_MUTATION = gql`
 `;
 
 function Login() {
+  const location = useLocation();
+  console.log(location);
   const {
     register,
     handleSubmit,
@@ -45,6 +52,10 @@ function Login() {
     clearErrors,
   } = useForm({
     mode: 'onChanged',
+    defaultValues: {
+      username: location?.state?.username || '',
+      password: location?.state?.password || '',
+    },
   }); //register : input을 위해 state, onChage,value설정하는데 도움을 줌.
 
   //onCompleted : Mutation이 오류없이 성공적으로 완료될 때 호출되는 콜백 함수
@@ -82,6 +93,7 @@ function Login() {
         <div>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
+        <Notification>{location?.state?.message}</Notification>
         <form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
             {...register('username', {
