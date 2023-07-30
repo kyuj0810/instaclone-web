@@ -17,7 +17,7 @@ function useUser() {
   const { data } = useQuery(ME_QUERY, {
     skip: !hasToken,
   });
-  console.log(data);
+
   //useEffect 는 hook가 마운트되면 한 번 실행되고, 데이터가 변경될 때 마다 실행됨.
   useEffect(() => {
     if (data?.me === null) {
