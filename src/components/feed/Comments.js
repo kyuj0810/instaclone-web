@@ -3,12 +3,14 @@ import { styled } from 'styled-components';
 import Comment from './Comment';
 import { useForm } from 'react-hook-form';
 import { gql, useMutation } from '@apollo/client';
+import useUser from '../../hooks/useUser';
 
 const CREATE_COMMENT_MUTATION = gql`
   mutation createComment($photoId: Int!, $payload: String!) {
     createComment(photoId: $photoId, payload: $payload) {
       ok
       error
+      id
     }
   }
 `;
@@ -26,17 +28,47 @@ const CommentCount = styled.div`
 `;
 
 function Comments({ photoId, author, caption, commentNumber, comments }) {
+  const { data: userData } = useUser();
+  const { register, handleSubmit, setValue, getValues } = useForm();
+  const createCommentUpdate = (cache, result) => {
+    const {
+      data: {
+        createComment: { ok, id },
+      },
+    } = result;
+    if (ok && userData?.me) {
+      const { payload } = getValues();
+      setValue('payload', '');
+      const newComment = {
+        __typename: 'Comment',
+        createdAt: Date.now().toString(),
+        id,
+        isMine: true,
+        payload,
+        user: {
+          ...userData.me,
+        },
+      };
+      cache.modify({
+        id: `Photo:${photoId}`,
+        fields: {
+          comments(prev) {
+            return [...prev, newComment];
+          },
+        },
+      });
+    }
+  };
   const [createCommentMutation, { loading }] = useMutation(
-    CREATE_COMMENT_MUTATION
+    CREATE_COMMENT_MUTATION,
+    { update: createCommentUpdate }
   );
-  const { register, handleSubmit, setValue } = useForm();
   const onValid = (data) => {
     const { payload } = data;
     if (loading) {
       return;
     }
     createCommentMutation({ variables: { photoId, payload } });
-    setValue('payload', '');
   };
   return (
     <CommentsContainer>
