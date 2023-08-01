@@ -50,6 +50,7 @@ const IconsContainer = styled.div`
 function Header() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   const { data } = useUser();
+
   return (
     <SHeader>
       <Wrapper>
@@ -66,7 +67,9 @@ function Header() {
                 <FontAwesomeIcon icon={faCompass} size="1x" />
               </Icon>
               <Icon>
-                <Avatar url={data?.me?.avatar} />
+                <Link to={`/users/${data?.me?.username}`}>
+                  <Avatar url={data?.me?.avatar} />
+                </Link>
               </Icon>
             </IconsContainer>
           ) : (
