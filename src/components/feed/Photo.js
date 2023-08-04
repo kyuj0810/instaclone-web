@@ -115,7 +115,7 @@ function Photo({
     <PhotoContainer key={id}>
       <PhotoHeader>
         <Link to={`/users/${user.username}`}>
-          <Avatar lg url={user.avatar} />
+          <Avatar lg={'false'} url={user.avatar} />
         </Link>
         <Link to={`/users/${user.username}`}>
           <Username>{user.username}</Username>
