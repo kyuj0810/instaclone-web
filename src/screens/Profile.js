@@ -140,27 +140,11 @@ function Profile() {
     variables: {
       username,
     },
-    /*
-      간접적인 방법(refetchQueries) : query를 refetch하는 것을 뜻하며, Mutation이 완료되었을 때, 
-      백엔드와 통신해서 query를 다시 받아온 후, 그 query를 재사용 할 수 있음.
-    */
-    refetchQueries: [
-      { query: SEE_PROFILE_QUERY, variables: { username } },
-      {
-        query: ME_QUERY,
-      },
-    ],
   });
   const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
     variables: {
       username,
     },
-    refetchQueries: [
-      { query: SEE_PROFILE_QUERY, variables: { username } },
-      {
-        query: ME_QUERY,
-      },
-    ],
   });
 
   const getButton = (seeProfile) => {
