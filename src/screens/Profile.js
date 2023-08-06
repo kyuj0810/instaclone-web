@@ -7,7 +7,7 @@ import { FatText } from '../components/shared';
 import { PHOTO_FRAGMENT } from '../fragments';
 import Button from '../components/auth/Button';
 import PageTitle from '../components/PageTitle';
-import useUser, { ME_QUERY } from '../hooks/useUser';
+import useUser from '../hooks/useUser';
 
 const FOLLOW_USER_MUTATION = gql`
   mutation followUser($username: String!) {
@@ -156,6 +156,15 @@ function Profile() {
         },
       },
     });
+    const { me } = userData;
+    cache.modify({
+      id: `User:${me.username}`,
+      fields: {
+        totalFollowing(prev) {
+          return prev - 1;
+        },
+      },
+    });
   };
   const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
     variables: {
@@ -179,6 +188,16 @@ function Profile() {
           return true;
         },
         totalFollowers(prev) {
+          return prev + 1;
+        },
+      },
+    });
+
+    const { me } = userData;
+    cache.modify({
+      id: `User:${me.username}`,
+      fields: {
+        totalFollowing(prev) {
           return prev + 1;
         },
       },
